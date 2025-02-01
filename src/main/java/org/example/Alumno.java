@@ -21,12 +21,8 @@ public class Alumno {
     public void setNota(float nota) {
         this.nota = nota;
     }
-    public String isAprobado() {
-        if(aprobado)
-        {
-            return "Aprobado : si";
-        }
-        return "Aprobado : no";
+    public boolean isAprobado() {
+        return aprobado;
     }
 
     public void setAprobado(boolean aprobado) {
