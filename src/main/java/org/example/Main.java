@@ -4,17 +4,14 @@ package org.example;
 import java.io.File;
 import java.io.IOException;
 import java.io.RandomAccessFile;
+import java.util.InputMismatchException;
 import java.util.Scanner;
 
 public class Main {
 
     public static void main(String[] args) {
-        Scanner leer = new Scanner(System.in);
-        String nombre;
-        int edad;
-        float nota;
 
-        //Crear ficheros
+        //crear alumnos dat
         File carpeta = new File("./tarea1/ficheros");
         carpeta.mkdirs();
         File alumnosDAT = new File("./tarea1/ficheros/alumnos.dat");
@@ -24,7 +21,43 @@ public class Main {
         } catch (IOException e) {
             System.out.println(e.getMessage());
         }
-/*
+        //punto 1, pido los datos de los alumnos
+       // Alumno[] infoAlumnos = introducirAlumnos();
+
+        //punto 2, los inserto en el archivo alumnos.dat, le paso el array y el archivo
+       // guardarAlumnosDat(infoAlumnos, alumnosDAT);
+
+
+        //punto 3, cambiar notas y variable aprobadoo
+       // actualizaNotas(alumnosDAT);
+
+
+        //punto 4, exportar datos en texto plano
+        //crear el archivo
+        File alumnosTXT = new File("./tarea1/ficheros/alumnos.txt");
+        try{
+            alumnosTXT.createNewFile();
+
+        } catch (IOException e) {
+            System.out.println(e.getMessage());
+        }
+        escribirAlumnosTxt(alumnosDAT, alumnosTXT);
+
+    }
+    /*
+    * Dudas:
+    * me salta excepcion en el punto 3 en el read uft, le he hecho una apaño chapucero
+    *
+    * en el punto 4 no se me guardan bien los datos, la nota es siemrpe 10 y tambien me salta excepcion
+    *
+    *
+    * */
+
+    public static Alumno[] introducirAlumnos(){
+        Scanner leer = new Scanner(System.in);
+        String nombre;
+        int edad;
+        float nota;
 
         Alumno[] infoAlumnos = new Alumno[5];//guardo 5 alumnos max
         System.out.println("Introduce la información de 5 alumnos.");
@@ -49,7 +82,9 @@ public class Main {
             }
 
         }
-
+        return infoAlumnos;
+    }
+    public static void guardarAlumnosDat(Alumno[] infoAlumnos, File alumnosDAT) {
         //guardar los datos en alumnosDAT, punto 2
         try(RandomAccessFile rafAlumosDat= new RandomAccessFile(alumnosDAT, "rw")){
             for(int i=0; i<5; i++)
@@ -58,7 +93,6 @@ public class Main {
                 rafAlumosDat.writeInt(infoAlumnos[i].getEdad());
                 rafAlumosDat.writeFloat(infoAlumnos[i].getNota());
                 rafAlumosDat.writeBoolean(infoAlumnos[i].isAprobado());
-                //rafAlumosDat.seek(alumnosDAT.length());//me posiciono al final
             }
 
         } catch (IOException e) {
@@ -66,7 +100,10 @@ public class Main {
         }
 
 
-        //punto 3, cambiar notas y variable aprobadoo
+
+
+    }
+    public static void actualizaNotas(File alumnosDAT){
         try(RandomAccessFile rafNotasActualiza= new RandomAccessFile(alumnosDAT, "rw")) {
             int contador=0;
             //----------------------------------------------------------------------------------------------
@@ -106,18 +143,10 @@ public class Main {
         } catch (IOException e) {
             System.err.println("Error al leer el archivo: "+e.getMessage());
         }
-*/
 
-        //exportar datos en texto plano, punto 4
-        //crear el archivo
-        File alumnosTXT = new File("./tarea1/ficheros/alumnos.txt");
-        try{
-            alumnosTXT.createNewFile();
 
-        } catch (IOException e) {
-            System.out.println(e.getMessage());
-        }
-
+    }
+    public  static void escribirAlumnosTxt(File alumnosDAT, File alumnosTXT ){
         try (RandomAccessFile rafLeer= new RandomAccessFile(alumnosDAT, "r");
              RandomAccessFile rafEscribir= new RandomAccessFile(alumnosTXT, "rw")){
 
@@ -125,24 +154,21 @@ public class Main {
             while(contador<5) {
                 //leer de alumnos.dat
                 /*
-                *     ME DA PROBLEMAS EN EL READUTF SIEMPRE !!!!!!!!!!!!!!!!!!!!!!!!!1
-                * */
+                 *     ME DA PROBLEMAS EN EL READUTF SIEMPRE !!!!!!!!!!!!!!!!!!!!!!!!!1
+                 * */
                 String nombreLee = rafLeer.readUTF(); //leo el nombre
                 int edadLee = rafLeer.readInt(); //leo la edad
                 float notaLee = rafLeer.readFloat(); //leo la nota
                 boolean aprobadoLee = rafLeer.readBoolean();
 
                 //escribir en alumnos.txt
-
                 rafEscribir.writeUTF("Nombre: "+nombreLee+", Edad: "+edadLee+", Nota: "+notaLee+", Aprobado: "+aprobadoLee+"\n");
+                contador++;
             }
 
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-
-
-
 
     }
 }
