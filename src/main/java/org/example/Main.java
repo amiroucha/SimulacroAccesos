@@ -2,10 +2,8 @@ package org.example;
 
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.RandomAccessFile;
-import java.util.InputMismatchException;
 import java.util.Scanner;
 
 public class Main {
@@ -66,14 +64,14 @@ public class Main {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-*/
+
 
         //punto 3, cambiar notas y variable aprobadoo
         try(RandomAccessFile rafNotasActualiza= new RandomAccessFile(alumnosDAT, "rw")) {
             int contador=0;
-            /*----------------------------------------------------------------------------------------------
-            ME SALTA EXCEPCION AQUI. CREO QUE ES EL READUTF
-            * ----------------------------------------------------------------------------------------------*/
+            //----------------------------------------------------------------------------------------------
+            //ME SALTA EXCEPCION AQUI. CREO QUE ES EL READUTF
+            //* ----------------------------------------------------------------------------------------------
             //while (rafNotasActualiza.getFilePointer() < rafNotasActualiza.length()) {//mientras que el fichero no llegue a su final
             while(contador<5) {
                 //aqui el puntero esta a 0
@@ -108,15 +106,43 @@ public class Main {
         } catch (IOException e) {
             System.err.println("Error al leer el archivo: "+e.getMessage());
         }
-
+*/
 
         //exportar datos en texto plano, punto 4
-        /*File alumnosTXT = new File("./tarea1/ficheros/alumnos.txt");
+        //crear el archivo
+        File alumnosTXT = new File("./tarea1/ficheros/alumnos.txt");
         try{
             alumnosTXT.createNewFile();
 
         } catch (IOException e) {
             System.out.println(e.getMessage());
-        }*/
+        }
+
+        try (RandomAccessFile rafLeer= new RandomAccessFile(alumnosDAT, "r");
+             RandomAccessFile rafEscribir= new RandomAccessFile(alumnosTXT, "rw")){
+
+            int contador=0;
+            while(contador<5) {
+                //leer de alumnos.dat
+                /*
+                *     ME DA PROBLEMAS EN EL READUTF SIEMPRE !!!!!!!!!!!!!!!!!!!!!!!!!1
+                * */
+                String nombreLee = rafLeer.readUTF(); //leo el nombre
+                int edadLee = rafLeer.readInt(); //leo la edad
+                float notaLee = rafLeer.readFloat(); //leo la nota
+                boolean aprobadoLee = rafLeer.readBoolean();
+
+                //escribir en alumnos.txt
+
+                rafEscribir.writeUTF("Nombre: "+nombreLee+", Edad: "+edadLee+", Nota: "+notaLee+", Aprobado: "+aprobadoLee+"\n");
+            }
+
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+
+
+
     }
 }
