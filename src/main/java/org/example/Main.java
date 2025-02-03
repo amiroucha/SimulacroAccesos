@@ -22,14 +22,14 @@ public class Main {
             System.out.println(e.getMessage());
         }
         //punto 1, pido los datos de los alumnos
-       // Alumno[] infoAlumnos = introducirAlumnos();
+        Alumno[] infoAlumnos = introducirAlumnos();
 
         //punto 2, los inserto en el archivo alumnos.dat, le paso el array y el archivo
-       // guardarAlumnosDat(infoAlumnos, alumnosDAT);
+        guardarAlumnosDat(infoAlumnos, alumnosDAT);
 
 
         //punto 3, cambiar notas y variable aprobadoo
-       // actualizaNotas(alumnosDAT);
+        actualizaNotas(alumnosDAT);
 
 
         //punto 4, exportar datos en texto plano
@@ -41,7 +41,7 @@ public class Main {
         } catch (IOException e) {
             System.out.println(e.getMessage());
         }
-        escribirAlumnosTxt(alumnosDAT, alumnosTXT);
+        //escribirAlumnosTxt(alumnosDAT, alumnosTXT);
 
     }
     /*
@@ -87,6 +87,7 @@ public class Main {
     public static void guardarAlumnosDat(Alumno[] infoAlumnos, File alumnosDAT) {
         //guardar los datos en alumnosDAT, punto 2
         try(RandomAccessFile rafAlumosDat= new RandomAccessFile(alumnosDAT, "rw")){
+            rafAlumosDat.setLength(0); //resetear para que no se ralle
             for(int i=0; i<5; i++)
             {
                 rafAlumosDat.writeUTF(infoAlumnos[i].getNombre());
@@ -100,17 +101,16 @@ public class Main {
         }
 
 
-
-
     }
     public static void actualizaNotas(File alumnosDAT){
         try(RandomAccessFile rafNotasActualiza= new RandomAccessFile(alumnosDAT, "rw")) {
-            int contador=0;
+            long posicion=0;
             //----------------------------------------------------------------------------------------------
             //ME SALTA EXCEPCION AQUI. CREO QUE ES EL READUTF
-            //* ----------------------------------------------------------------------------------------------
+            //* ---------------------------------------------
+            // -------------------------------------------------
             //while (rafNotasActualiza.getFilePointer() < rafNotasActualiza.length()) {//mientras que el fichero no llegue a su final
-            while(contador<5) {
+            while(posicion<rafNotasActualiza.length()) {
                 //aqui el puntero esta a 0
                 System.out.println("Nombre: "+rafNotasActualiza.readUTF()); //leo el nombre, el puntero se mueve
                 System.out.println("Edad: "+rafNotasActualiza.readInt()); //leo la edad
@@ -137,11 +137,12 @@ public class Main {
                 rafNotasActualiza.seek(posicionAprobado);
                 rafNotasActualiza.writeBoolean(aprobadoAct);
                 System.out.println("Aprobado actualizado: " + aprobadoAct);
-                contador++;
+                posicion = rafNotasActualiza.getFilePointer();
             }
 
         } catch (IOException e) {
             System.err.println("Error al leer el archivo: "+e.getMessage());
+            throw new RuntimeException(e);
         }
 
 
@@ -150,8 +151,8 @@ public class Main {
         try (RandomAccessFile rafLeer= new RandomAccessFile(alumnosDAT, "r");
              RandomAccessFile rafEscribir= new RandomAccessFile(alumnosTXT, "rw")){
 
-            int contador=0;
-            while(contador<5) {
+            int posicion=0;
+            while(posicion<5) {
                 //leer de alumnos.dat
                 /*
                  *     ME DA PROBLEMAS EN EL READUTF SIEMPRE !!!!!!!!!!!!!!!!!!!!!!!!!1
@@ -163,7 +164,7 @@ public class Main {
 
                 //escribir en alumnos.txt
                 rafEscribir.writeUTF("Nombre: "+nombreLee+", Edad: "+edadLee+", Nota: "+notaLee+", Aprobado: "+aprobadoLee+"\n");
-                contador++;
+                posicion++;
             }
 
         } catch (IOException e) {
