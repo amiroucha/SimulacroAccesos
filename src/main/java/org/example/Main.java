@@ -8,6 +8,10 @@ import java.util.InputMismatchException;
 import java.util.Scanner;
 
 public class Main {
+    /*
+    * Tengo el main estructurado en métodos
+    * cada apartado es un método diferente
+    * */
     public static int NUMALUMNOS =5;
     public static void main(String[] args) {
 
@@ -135,21 +139,13 @@ public class Main {
 
 
     }
-    /*
-    * PREGUNTAR COMO VE ESTOOOO
-    * LO HAGO CON UN BUFFER WRITER MEJOR ??
-    *
-    * me salta excepcion con eso, asi que no se
-    * Puedo recorrer solo uno de ellos ?
-    *
-    * Lo he puesto como numero, ya lo veo luego
-    * */
+
     public  static void escribirAlumnosTxt(File alumnosDAT, File alumnosTXT ){
         try (RandomAccessFile rafLeer= new RandomAccessFile(alumnosDAT, "r");
              RandomAccessFile rafEscribirLeer= new RandomAccessFile(alumnosTXT, "rw")){
 
             long posicion1=0;
-            rafEscribirLeer.setLength(0); //resetear para que no se ralle
+            //le he tenido que acabar poniendo el numAlumnos ya que de otra forma me saltaba excepcion
             while(posicion1<NUMALUMNOS) {
                 //leer de alumnos.dat
 
