@@ -22,14 +22,14 @@ public class Main {
             System.out.println(e.getMessage());
         }
         //punto 1, pido los datos de los alumnos
-        Alumno[] infoAlumnos = introducirAlumnos();
+        //Alumno[] infoAlumnos = introducirAlumnos();
 
         //punto 2, los inserto en el archivo alumnos.dat, le paso el array y el archivo
-        guardarAlumnosDat(infoAlumnos, alumnosDAT);
+        //guardarAlumnosDat(infoAlumnos, alumnosDAT);
 
 
         //punto 3, cambiar notas y variable aprobadoo
-        actualizaNotas(alumnosDAT);
+        //actualizaNotas(alumnosDAT);
 
 
         //punto 4, exportar datos en texto plano
@@ -41,17 +41,9 @@ public class Main {
         } catch (IOException e) {
             System.out.println(e.getMessage());
         }
-        //escribirAlumnosTxt(alumnosDAT, alumnosTXT);
+        escribirAlumnosTxt(alumnosDAT, alumnosTXT);
 
     }
-    /*
-    * Dudas:
-    * me salta excepcion en el punto 3 en el read uft, le he hecho una apaño chapucero
-    *
-    * en el punto 4 no se me guardan bien los datos, la nota es siemrpe 10 y tambien me salta excepcion
-    *
-    *
-    * */
 
     public static Alumno[] introducirAlumnos(){
         Scanner leer = new Scanner(System.in);
@@ -73,6 +65,8 @@ public class Main {
                 System.out.println("Nota:");
                 nota = leer.nextFloat();
                 leer.nextLine();
+                if(nota>10) nota=10; //me  aseguro que la nota no este por encima  de 10 o por debajo de 0
+                else if(nota<0) nota=0;
                 //guardo la informacion
                 Alumno alumno = new Alumno(nombre, edad, nota);
                 infoAlumnos[i] = alumno;
@@ -105,11 +99,6 @@ public class Main {
     public static void actualizaNotas(File alumnosDAT){
         try(RandomAccessFile rafNotasActualiza= new RandomAccessFile(alumnosDAT, "rw")) {
             long posicion=0;
-            //----------------------------------------------------------------------------------------------
-            //ME SALTA EXCEPCION AQUI. CREO QUE ES EL READUTF
-            //* ---------------------------------------------
-            // -------------------------------------------------
-            //while (rafNotasActualiza.getFilePointer() < rafNotasActualiza.length()) {//mientras que el fichero no llegue a su final
             while(posicion<rafNotasActualiza.length()) {
                 //aqui el puntero esta a 0
                 System.out.println("Nombre: "+rafNotasActualiza.readUTF()); //leo el nombre, el puntero se mueve
@@ -147,24 +136,36 @@ public class Main {
 
 
     }
+    /*
+    * PREGUNTAR COMO VE ESTOOOO
+    * LO HAGO CON UN BUFFER WRITER MEJOR ??
+    *
+    * me salta excepcion con eso, asi que no se
+    * Puedo recorrer solo uno de ellos ?
+    *
+    * */
     public  static void escribirAlumnosTxt(File alumnosDAT, File alumnosTXT ){
         try (RandomAccessFile rafLeer= new RandomAccessFile(alumnosDAT, "r");
-             RandomAccessFile rafEscribir= new RandomAccessFile(alumnosTXT, "rw")){
+             RandomAccessFile rafEscribirLeer= new RandomAccessFile(alumnosTXT, "rw")){
 
-            int posicion=0;
-            while(posicion<5) {
+            long posicion1=0, posicion2=0;
+
+            while(posicion1<rafLeer.length() && posicion2<rafEscribirLeer.length()) {
                 //leer de alumnos.dat
-                /*
-                 *     ME DA PROBLEMAS EN EL READUTF SIEMPRE !!!!!!!!!!!!!!!!!!!!!!!!!1
-                 * */
+
                 String nombreLee = rafLeer.readUTF(); //leo el nombre
                 int edadLee = rafLeer.readInt(); //leo la edad
                 float notaLee = rafLeer.readFloat(); //leo la nota
                 boolean aprobadoLee = rafLeer.readBoolean();
 
+                //COMPROBAR VALOR DE APROBADO
+                String aprobadoString;
+                if(aprobadoLee) aprobadoString = "si";
+                else aprobadoString="no";
                 //escribir en alumnos.txt
-                rafEscribir.writeUTF("Nombre: "+nombreLee+", Edad: "+edadLee+", Nota: "+notaLee+", Aprobado: "+aprobadoLee+"\n");
-                posicion++;
+                rafEscribirLeer.writeUTF("Nombre: "+nombreLee+", Edad: "+edadLee+", Nota: "+notaLee+", Aprobado: "+aprobadoString+"\n");
+                posicion1++;
+                posicion2++;
             }
 
         } catch (IOException e) {
