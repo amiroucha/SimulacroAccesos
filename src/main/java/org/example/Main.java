@@ -27,7 +27,6 @@ public class Main {
         //punto 2, los inserto en el archivo alumnos.dat, le paso el array y el archivo
         //guardarAlumnosDat(infoAlumnos, alumnosDAT);
 
-
         //punto 3, cambiar notas y variable aprobadoo
         //actualizaNotas(alumnosDAT);
 
@@ -143,14 +142,15 @@ public class Main {
     * me salta excepcion con eso, asi que no se
     * Puedo recorrer solo uno de ellos ?
     *
+    * Lo he puesto como numero, ya lo veo luego
     * */
     public  static void escribirAlumnosTxt(File alumnosDAT, File alumnosTXT ){
         try (RandomAccessFile rafLeer= new RandomAccessFile(alumnosDAT, "r");
              RandomAccessFile rafEscribirLeer= new RandomAccessFile(alumnosTXT, "rw")){
 
-            long posicion1=0, posicion2=0;
-
-            while(posicion1<rafLeer.length() && posicion2<rafEscribirLeer.length()) {
+            long posicion1=0;
+            rafEscribirLeer.setLength(0); //resetear para que no se ralle
+            while(posicion1<5) {
                 //leer de alumnos.dat
 
                 String nombreLee = rafLeer.readUTF(); //leo el nombre
@@ -164,12 +164,13 @@ public class Main {
                 else aprobadoString="no";
                 //escribir en alumnos.txt
                 rafEscribirLeer.writeUTF("Nombre: "+nombreLee+", Edad: "+edadLee+", Nota: "+notaLee+", Aprobado: "+aprobadoString+"\n");
+
                 posicion1++;
-                posicion2++;
             }
+            System.out.println("Fichero txt escrito correctamente");
 
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            System.out.println("Error al leer el archivo: "+e.getMessage());
         }
 
     }
