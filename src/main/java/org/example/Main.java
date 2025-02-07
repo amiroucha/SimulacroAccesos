@@ -8,7 +8,7 @@ import java.util.InputMismatchException;
 import java.util.Scanner;
 
 public class Main {
-
+    public static int NUMALUMNOS =5;
     public static void main(String[] args) {
 
         //crear alumnos dat
@@ -150,7 +150,7 @@ public class Main {
 
             long posicion1=0;
             rafEscribirLeer.setLength(0); //resetear para que no se ralle
-            while(posicion1<5) {
+            while(posicion1<NUMALUMNOS) {
                 //leer de alumnos.dat
 
                 String nombreLee = rafLeer.readUTF(); //leo el nombre
