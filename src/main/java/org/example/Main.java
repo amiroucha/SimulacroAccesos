@@ -26,10 +26,10 @@ public class Main {
             System.out.println(e.getMessage());
         }
         //punto 1, pido los datos de los alumnos
-        //Alumno[] infoAlumnos = introducirAlumnos();
+        Alumno[] infoAlumnos = introducirAlumnos();
 
         //punto 2, los inserto en el archivo alumnos.dat, le paso el array y el archivo
-        //guardarAlumnosDat(infoAlumnos, alumnosDAT);
+        guardarAlumnosDat(infoAlumnos, alumnosDAT);
 
         //punto 3, cambiar notas y variable aprobadoo
         actualizaNotas(alumnosDAT);

@@ -1,10 +1,10 @@
 package org.example;
 
 public class Alumno {
-    private String nombre;
+    private final String nombre;
     private int edad;
-    private float nota;
-    private boolean aprobado;
+    private final float nota;
+    private final boolean aprobado;
 
     public String getNombre() {
         return nombre;
@@ -18,25 +18,15 @@ public class Alumno {
         return nota;
     }
 
-    public void setNota(float nota) {
-        this.nota = nota;
-    }
     public boolean isAprobado() {
         return aprobado;
     }
 
-    public void setAprobado(boolean aprobado) {
-        this.aprobado = aprobado;
-    }
     public Alumno(String nombre, int edad, float nota) {
         this.nombre = nombre;
         this.edad = edad;
         this.nota = nota;
-        if (nota < 5) {
-            aprobado = false;
-        }else{
-            aprobado = true;
-        }
+        aprobado = !(nota < 5);
         if (edad>120) this.edad=120;
         else if(edad<0) this.edad=1;
     }
