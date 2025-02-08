@@ -32,7 +32,7 @@ public class Main {
         //guardarAlumnosDat(infoAlumnos, alumnosDAT);
 
         //punto 3, cambiar notas y variable aprobadoo
-        //actualizaNotas(alumnosDAT);
+        actualizaNotas(alumnosDAT);
 
 
         //punto 4, exportar datos en texto plano
@@ -73,6 +73,7 @@ public class Main {
                 //guardo la informacion
                 Alumno alumno = new Alumno(nombre, edad, nota);
                 infoAlumnos[i] = alumno;
+                System.out.println("-------Alumno "+(i+1)+" guardado------------------------------------");
             }catch (InputMismatchException e)
             {
                 System.err.println("Error de formato : "+e.getMessage());
@@ -92,6 +93,9 @@ public class Main {
                 rafAlumosDat.writeFloat(infoAlumnos[i].getNota());
                 rafAlumosDat.writeBoolean(infoAlumnos[i].isAprobado());
             }
+            System.out.println("-------------------------------------------------");
+            System.out.println("Alumnos guardados correctamente");
+            System.out.println("-------------------------------------------------");
 
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -102,8 +106,10 @@ public class Main {
     public static void actualizaNotas(File alumnosDAT){
         try(RandomAccessFile rafNotasActualiza= new RandomAccessFile(alumnosDAT, "rw")) {
             long posicion=0;
+            System.out.println("Actualizar notas...............");
             while(posicion<rafNotasActualiza.length()) {
                 //aqui el puntero esta a 0
+                System.out.println("-------------------------------------------------");
                 System.out.println("Nombre: "+rafNotasActualiza.readUTF()); //leo el nombre, el puntero se mueve
                 System.out.println("Edad: "+rafNotasActualiza.readInt()); //leo la edad
 
@@ -124,13 +130,15 @@ public class Main {
                 System.out.println("Nota actualizada: " + notaActu);
 
                 //compruebo si necesito cambiar el booleano aprobado
-                if (notaActu<5) aprobadoAct = false;
-                else aprobadoAct = true;
+                //si notaAct es < 5 = !(suspenso = true), entonces notaAct seria False
+                //caso contrario, si la nota es > 5, seria  !(suspenso = false) = true
+                aprobadoAct = !(notaActu < 5);
                 rafNotasActualiza.seek(posicionAprobado);
                 rafNotasActualiza.writeBoolean(aprobadoAct);
                 System.out.println("Aprobado actualizado: " + aprobadoAct);
                 posicion = rafNotasActualiza.getFilePointer();
             }
+            System.out.println("-------------------------------------------------");
 
         } catch (IOException e) {
             System.err.println("Error al leer el archivo: "+e.getMessage());
@@ -145,10 +153,10 @@ public class Main {
              RandomAccessFile rafEscribirLeer= new RandomAccessFile(alumnosTXT, "rw")){
 
             long posicion1=0;
-            //le he tenido que acabar poniendo el numAlumnos ya que de otra forma me saltaba excepcion
+            System.out.println("Reescribir en alumnos.txt................");
             while(posicion1<NUMALUMNOS) {
                 //leer de alumnos.dat
-
+                System.out.println("-------------------------------------------------");
                 String nombreLee = rafLeer.readUTF(); //leo el nombre
                 int edadLee = rafLeer.readInt(); //leo la edad
                 float notaLee = rafLeer.readFloat(); //leo la nota
@@ -159,10 +167,12 @@ public class Main {
                 if(aprobadoLee) aprobadoString = "si";
                 else aprobadoString="no";
                 //escribir en alumnos.txt
+                System.out.println("Informacion leída: Nombre: "+nombreLee+", Edad: "+edadLee+", Nota: "+notaLee+", Aprobado: "+aprobadoString);
                 rafEscribirLeer.writeUTF("Nombre: "+nombreLee+", Edad: "+edadLee+", Nota: "+notaLee+", Aprobado: "+aprobadoString+"\n");
-
                 posicion1++;
             }
+            System.out.println("-------------------------------------------------");
+
             System.out.println("Fichero txt escrito correctamente");
 
         } catch (IOException e) {

@@ -37,6 +37,8 @@ public class Alumno {
         }else{
             aprobado = true;
         }
+        if (edad>120) this.edad=120;
+        else if(edad<0) this.edad=1;
     }
 
 }
