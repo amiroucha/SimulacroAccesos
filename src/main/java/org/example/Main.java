@@ -82,6 +82,7 @@ public class Main {
         }
         return infoAlumnos;
     }
+    //guardar en bytes
     public static void guardarAlumnosDat(Alumno[] infoAlumnos, File alumnosDAT) {
         //guardar los datos en alumnosDAT, punto 2
         try(RandomAccessFile rafAlumosDat= new RandomAccessFile(alumnosDAT, "rw")){
@@ -116,12 +117,13 @@ public class Main {
                 long posicionNota = rafNotasActualiza.getFilePointer();
                 float notaActu = rafNotasActualiza.readFloat(); //leo la nota
 
-                long posicionAprobado = rafNotasActualiza.getFilePointer();
-                boolean aprobadoAct = rafNotasActualiza.readBoolean();
+                long posicionAprobado = rafNotasActualiza.getFilePointer();//guardo la posicion del booleano
+                boolean aprobadoAct = rafNotasActualiza.readBoolean(); //leo y me guardo su valor
 
                 System.out.println("Nota sin actualizar: " + notaActu);
                 System.out.println("Aprobado sin actualizar : " + aprobadoAct);
 
+                //incremento 1 el valor de la nota
                 if (notaActu <= 9.0f) notaActu += 1.0f;
                 else notaActu = 10.0f;
 
@@ -132,7 +134,7 @@ public class Main {
                 //compruebo si necesito cambiar el booleano aprobado
                 //si notaAct es < 5 = !(suspenso = true), entonces notaAct seria False
                 //caso contrario, si la nota es > 5, seria  !(suspenso = false) = true
-                aprobadoAct = !(notaActu < 5);
+                aprobadoAct = notaActu >= 5;
                 rafNotasActualiza.seek(posicionAprobado);
                 rafNotasActualiza.writeBoolean(aprobadoAct);
                 System.out.println("Aprobado actualizado: " + aprobadoAct);
@@ -144,8 +146,6 @@ public class Main {
             System.err.println("Error al leer el archivo: "+e.getMessage());
             throw new RuntimeException(e);
         }
-
-
     }
 
     public  static void escribirAlumnosTxt(File alumnosDAT, File alumnosTXT ){
@@ -154,6 +154,7 @@ public class Main {
 
             long posicion1=0;
             System.out.println("Reescribir en alumnos.txt................");
+            rafEscribirLeer.setLength(0); //resetear para que no se ralle
             while(posicion1<NUMALUMNOS) {
                 //leer de alumnos.dat
                 System.out.println("-------------------------------------------------");
